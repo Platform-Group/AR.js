@@ -13,11 +13,36 @@ AFRAME.registerComponent("arjs-webcam-texture", {
     this.video.setAttribute("playsinline", true);
     this.video.setAttribute("display", "none");
     document.body.appendChild(this.video);
-    this.geom = new THREE.PlaneBufferGeometry(); //0.5, 0.5);
-    this.texture = new THREE.VideoTexture(this.video);
-    this.material = new THREE.MeshBasicMaterial({ map: this.texture });
-    const mesh = new THREE.Mesh(this.geom, this.material);
-    this.texScene.add(mesh);
+    console.log('data by geom ', this)
+    
+    const constraints = {
+      video: {
+        facingMode: "environment",
+        width: { ideal: 1920 }, 
+        height: { ideal: 1080 }
+      },
+    };
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      let streamSettings = stream.getVideoTracks()[0].getSettings()
+
+      
+      let sourceAspectRatio = streamSettings.width / streamSettings.height;
+      let displayAspectRatio = window.innerWidth / window.innerHeight;
+      let geomX = 1;
+      let geomY = 1;
+      if (displayAspectRatio > sourceAspectRatio) {
+          // Display is wider than source
+          geomX = sourceAspectRatio / displayAspectRatio;
+      } else {
+          // Display is taller than source
+          geomY = displayAspectRatio / sourceAspectRatio;
+      }
+      this.geom = new THREE.PlaneBufferGeometry(geomX, geomY);
+      this.texture = new THREE.VideoTexture(this.video);
+      this.material = new THREE.MeshBasicMaterial({ map: this.texture });
+      const mesh = new THREE.Mesh(this.geom, this.material);
+      this.texScene.add(mesh);
+    })
   },
 
   play: function () {

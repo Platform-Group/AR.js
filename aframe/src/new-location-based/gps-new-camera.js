@@ -69,11 +69,11 @@ AFRAME.registerComponent("gps-new-camera", {
     // look-controls disabled (this interferes with the readings from the
     // sensors). On desktop, use standard look-controls instead.
 
-    const mobile = this._isMobile();
-    this.el.setAttribute("look-controls-enabled", !mobile);
-    if (mobile) {
-      this.el.setAttribute("arjs-device-orientation-controls", true);
-    }
+    // const mobile = this._isMobile();
+    // this.el.setAttribute("look-controls-enabled", !mobile);
+    // if (mobile) {
+    //   this.el.setAttribute("arjs-device-orientation-controls", true);
+    // }
 
     // from original gps-camera component
     // if Safari
@@ -96,6 +96,7 @@ AFRAME.registerComponent("gps-new-camera", {
       maximumAge: this.data.gpsTimeInterval,
     });
     if (
+      (!this.data.fakeGpsStarted) &&
       (this.data.simulateLatitude !== 0 || this.data.simulateLongitude !== 0) &&
       (this.data.simulateLatitude != oldData.simulateLatitude ||
         this.data.simulateLongitude != oldData.simulateLongitude)
@@ -105,8 +106,7 @@ AFRAME.registerComponent("gps-new-camera", {
         this.data.simulateLongitude,
         this.data.simulateLatitude
       );
-      this.data.simulateLatitude = 0;
-      this.data.simulateLongitude = 0;
+      this.data.fakeGpsStarted = true
     }
     if (this.data.simulateAltitude > -Number.MAX_VALUE) {
       this.threeLoc.setElevation(this.data.simulateAltitude + 1.6);
