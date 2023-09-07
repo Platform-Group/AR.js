@@ -96,7 +96,6 @@ AFRAME.registerComponent("gps-new-camera", {
       maximumAge: this.data.gpsTimeInterval,
     });
     if (
-      (!this.data.fakeGpsStarted) &&
       (this.data.simulateLatitude !== 0 || this.data.simulateLongitude !== 0) &&
       (this.data.simulateLatitude != oldData.simulateLatitude ||
         this.data.simulateLongitude != oldData.simulateLongitude)
@@ -114,7 +113,7 @@ AFRAME.registerComponent("gps-new-camera", {
   },
 
   play: function () {
-    if (this.data.simulateLatitude === 0 && this.data.simulateLongitude === 0) {
+    if (!this.data.fakeGpsStarted && this.data.simulateLatitude === 0 && this.data.simulateLongitude === 0) {
       this.threeLoc.startGps();
     }
   },
