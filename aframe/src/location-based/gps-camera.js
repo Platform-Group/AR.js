@@ -227,19 +227,20 @@ AFRAME.registerComponent("gps-camera", {
    */
   _initWatchGPS: function (onSuccess, onError) {
     if (!onError) {
+      const that = this
       onError = function (err) {
         console.warn("ERROR(" + err.code + "): " + err.message);
 
         if (err.code === 1) {
           // User denied GeoLocation, let their know that
-          this.el.sceneEl.systems["arjs"]._displayErrorPopup(
+          that.el.sceneEl.systems["arjs"]._displayErrorPopup(
             "Please activate Geolocation and refresh the page. If it is already active, please check permissions for this website."
           );
           return;
         }
 
         if (err.code === 3) {
-          this.el.sceneEl.systems["arjs"]._displayErrorPopup(
+          that.el.sceneEl.systems["arjs"]._displayErrorPopup(
             "Cannot retrieve GPS position. Signal is absent."
           );
           return;
